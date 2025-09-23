@@ -42,12 +42,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl font-bold text-center">Login</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 sm:px-6">
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Usuário</Label>
@@ -58,6 +58,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                className="w-full text-sm sm:text-base"
               />
             </div>
             <div className="space-y-2">
@@ -69,10 +70,11 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="w-full text-sm sm:text-base"
               />
             </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <Button type="submit" className="w-full">
+            {error && <p className="text-red-500 text-xs sm:text-sm">{error}</p>}
+            <Button type="submit" className="w-full text-sm sm:text-base">
               Entrar
             </Button>
           </form>

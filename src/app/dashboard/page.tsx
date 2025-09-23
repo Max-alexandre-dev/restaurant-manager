@@ -262,250 +262,261 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-4xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Bem-vindo ao Dashboard</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-center mb-6">
-            Você está logado como {typeof window !== 'undefined' ? localStorage.getItem('username') : ''}!
-          </p>
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Restaurantes Cadastrados</h2>
-              <Dialog
-                open={openAddDialog}
-                onOpenChange={(open) => {
-                  setOpenAddDialog(open);
-                  if (!open) {
-                    setFormData(createEmptyFormData());
-                    setFormError('');
-                    setEditingRestaurant(null);
-                  }
-                }}
-              >
-                <DialogTrigger asChild>
-                  <Button
-                    onClick={() => {
-                      setEditingRestaurant(null);
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-4xl sm:max-w-5xl lg:max-w-6xl">
+          <CardHeader>
+            <CardTitle className="text-xl sm:text-2xl font-bold text-center">Bem-vindo ao Dashboard</CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 sm:px-6">
+            <p className="text-center mb-4 sm:mb-6 text-sm sm:text-base">
+              Você está logado como {typeof window !== 'undefined' ? localStorage.getItem('username') : ''}!
+            </p>
+            <div className="mb-4 sm:mb-6">
+              <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
+                <h2 className="text-lg sm:text-xl font-semibold">Restaurantes Cadastrados</h2>
+                <Dialog
+                  open={openAddDialog}
+                  onOpenChange={(open) => {
+                    setOpenAddDialog(open);
+                    if (!open) {
                       setFormData(createEmptyFormData());
                       setFormError('');
-                    }}
-                  >
-                    <FaPlus className="mr-2 h-4 w-4" />
-                    Adicionar Restaurante
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingRestaurant ? 'Editar Restaurante' : 'Adicionar Novo Restaurante'}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleFormSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">Nome</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleFormChange}
-                        placeholder="Digite o nome do restaurante"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="cuisine">Cozinha</Label>
-                      <Input
-                        id="cuisine"
-                        name="cuisine"
-                        value={formData.cuisine}
-                        onChange={handleFormChange}
-                        placeholder="Digite o tipo de cozinha"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="city">Cidade</Label>
-                      <Input
-                        id="city"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleFormChange}
-                        placeholder="Digite a cidade"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="rating">Avaliação (0–5)</Label>
-                      <Input
-                        id="rating"
-                        name="rating"
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="5"
-                        value={formData.rating}
-                        onChange={handleFormChange}
-                        placeholder="Digite a avaliação"
-                        required
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="open"
-                        checked={formData.open}
-                        onCheckedChange={handleCheckboxChange}
-                      />
-                      <Label htmlFor="open">Aberto</Label>
-                    </div>
-                    {formError && <p className="text-red-500 text-sm">{formError}</p>}
-                    <Button type="submit" className="w-full">
-                      {editingRestaurant ? 'Salvar alterações' : 'Salvar'}
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="grid gap-4 mb-4 md:grid-cols-3">
-              <div className="flex flex-col">
-                <Label htmlFor="filter-name">Buscar por nome</Label>
-                <Input
-                  id="filter-name"
-                  placeholder="Digite o nome"
-                  value={filters.name}
-                  onChange={handleFilterInputChange('name')}
-                />
-              </div>
-              <div className="flex flex-col">
-                <Label htmlFor="filter-cuisine">Filtrar por cozinha</Label>
-                <Input
-                  id="filter-cuisine"
-                  placeholder="Digite o tipo de cozinha"
-                  value={filters.cuisine}
-                  onChange={handleFilterInputChange('cuisine')}
-                />
-              </div>
-              <div className="flex flex-col">
-                <Label htmlFor="filter-city">Filtrar por cidade</Label>
-                <Input
-                  id="filter-city"
-                  placeholder="Digite a cidade"
-                  value={filters.city}
-                  onChange={handleFilterInputChange('city')}
-                />
-              </div>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>
-                    <button
-                      type="button"
-                      onClick={() => handleSort('name')}
-                      className="flex items-center gap-1 font-semibold text-left"
-                    >
-                      Nome
-                      {getSortIndicator('name') && (
-                        <span className="text-xs">{getSortIndicator('name')}</span>
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead>Cozinha</TableHead>
-                  <TableHead>Cidade</TableHead>
-                  <TableHead>
-                    <button
-                      type="button"
-                      onClick={() => handleSort('rating')}
-                      className="flex items-center gap-1 font-semibold text-left"
-                    >
-                      Avaliação
-                      {getSortIndicator('rating') && (
-                        <span className="text-xs">{getSortIndicator('rating')}</span>
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Criado em</TableHead>
-                  <TableHead>Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {processedRestaurants.map((restaurant) => (
-                  <TableRow key={restaurant.id}>
-                    <TableCell>{restaurant.id}</TableCell>
-                    <TableCell className="font-medium">{restaurant.name}</TableCell>
-                    <TableCell>{restaurant.cuisine}</TableCell>
-                    <TableCell>{restaurant.city}</TableCell>
-                    <TableCell>{restaurant.rating}/5</TableCell>
-                    <TableCell>
-                      <Badge variant={restaurant.open ? 'default' : 'secondary'}>
-                        {restaurant.open ? 'Aberto' : 'Fechado'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {new Date(restaurant.createdAt).toLocaleDateString('pt-BR')}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => startEditing(restaurant)}
-                        >
-                          <FaEdit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => openDeleteConfirmation(restaurant)}
-                        >
-                          <FaTrash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-          <Dialog
-            open={openDeleteDialog}
-            onOpenChange={(open) => {
-              setOpenDeleteDialog(open);
-              if (!open) {
-                setRestaurantToDelete(null);
-              }
-            }}
-          >
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Confirmar Exclusão</DialogTitle>
-              </DialogHeader>
-              <p>
-                Tem certeza que deseja excluir o restaurante{' '}
-                <span className="font-semibold">{restaurantToDelete?.name}</span>?
-              </p>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setOpenDeleteDialog(false)}>
-                  Cancelar
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => restaurantToDelete && handleDelete(restaurantToDelete.id)}
+                      setEditingRestaurant(null);
+                    }
+                  }}
                 >
-                  Excluir
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-          <Button onClick={handleLogout} className="w-full">
-            Sair
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+                  <DialogTrigger asChild>
+                    <Button
+                      onClick={() => {
+                        setEditingRestaurant(null);
+                        setFormData(createEmptyFormData());
+                        setFormError('');
+                      }}
+                      className="text-sm sm:text-base"
+                    >
+                      <FaPlus className="mr-2 h-4 w-4" />
+                      Adicionar Restaurante
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-[90vw] sm:max-w-lg">
+                    <DialogHeader>
+                      <DialogTitle className="text-lg sm:text-xl">
+                        {editingRestaurant ? 'Editar Restaurante' : 'Adicionar Novo Restaurante'}
+                      </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleFormSubmit} className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Nome</Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleFormChange}
+                          placeholder="Digite o nome do restaurante"
+                          required
+                          className="text-sm sm:text-base"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="cuisine">Cozinha</Label>
+                        <Input
+                          id="cuisine"
+                          name="cuisine"
+                          value={formData.cuisine}
+                          onChange={handleFormChange}
+                          placeholder="Digite o tipo de cozinha"
+                          required
+                          className="text-sm sm:text-base"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="city">Cidade</Label>
+                        <Input
+                          id="city"
+                          name="city"
+                          value={formData.city}
+                          onChange={handleFormChange}
+                          placeholder="Digite a cidade"
+                          required
+                          className="text-sm sm:text-base"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="rating">Avaliação (0–5)</Label>
+                        <Input
+                          id="rating"
+                          name="rating"
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          max="5"
+                          value={formData.rating}
+                          onChange={handleFormChange}
+                          placeholder="Digite a avaliação"
+                          required
+                          className="text-sm sm:text-base"
+                        />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="open"
+                          checked={formData.open}
+                          onCheckedChange={handleCheckboxChange}
+                        />
+                        <Label htmlFor="open">Aberto</Label>
+                      </div>
+                      {formError && <p className="text-red-500 text-xs sm:text-sm">{formError}</p>}
+                      <Button type="submit" className="w-full text-sm sm:text-base">
+                        {editingRestaurant ? 'Salvar alterações' : 'Salvar'}
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div className="grid gap-4 mb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-col">
+                  <Label htmlFor="filter-name">Buscar por nome</Label>
+                  <Input
+                    id="filter-name"
+                    placeholder="Digite o nome"
+                    value={filters.name}
+                    onChange={handleFilterInputChange('name')}
+                    className="text-sm sm:text-base"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <Label htmlFor="filter-cuisine">Filtrar por cozinha</Label>
+                  <Input
+                    id="filter-cuisine"
+                    placeholder="Digite o tipo de cozinha"
+                    value={filters.cuisine}
+                    onChange={handleFilterInputChange('cuisine')}
+                    className="text-sm sm:text-base"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <Label htmlFor="filter-city">Filtrar por cidade</Label>
+                  <Input
+                    id="filter-city"
+                    placeholder="Digite a cidade"
+                    value={filters.city}
+                    onChange={handleFilterInputChange('city')}
+                    className="text-sm sm:text-base"
+                  />
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-xs sm:text-sm">ID</TableHead>
+                      <TableHead>
+                        <button
+                          type="button"
+                          onClick={() => handleSort('name')}
+                          className="flex items-center gap-1 font-semibold text-left text-xs sm:text-sm"
+                        >
+                          Nome
+                          {getSortIndicator('name') && (
+                            <span className="text-xs">{getSortIndicator('name')}</span>
+                          )}
+                        </button>
+                      </TableHead>
+                      <TableHead className="text-xs sm:text-sm">Cozinha</TableHead>
+                      <TableHead className="text-xs sm:text-sm">Cidade</TableHead>
+                      <TableHead>
+                        <button
+                          type="button"
+                          onClick={() => handleSort('rating')}
+                          className="flex items-center gap-1 font-semibold text-left text-xs sm:text-sm"
+                        >
+                          Avaliação
+                          {getSortIndicator('rating') && (
+                            <span className="text-xs">{getSortIndicator('rating')}</span>
+                          )}
+                        </button>
+                      </TableHead>
+                      <TableHead className="text-xs sm:text-sm">Status</TableHead>
+                      <TableHead className="text-xs sm:text-sm">Criado em</TableHead>
+                      <TableHead className="text-xs sm:text-sm">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {processedRestaurants.map((restaurant) => (
+                      <TableRow key={restaurant.id}>
+                        <TableCell className="text-xs sm:text-sm">{restaurant.id}</TableCell>
+                        <TableCell className="font-medium text-xs sm:text-sm">{restaurant.name}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{restaurant.cuisine}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{restaurant.city}</TableCell>
+                        <TableCell className="text-xs sm:text-sm">{restaurant.rating}/5</TableCell>
+                        <TableCell>
+                          <Badge variant={restaurant.open ? 'default' : 'secondary'} className="text-xs sm:text-sm">
+                            {restaurant.open ? 'Aberto' : 'Fechado'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-xs sm:text-sm">
+                          {new Date(restaurant.createdAt).toLocaleDateString('pt-BR')}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => startEditing(restaurant)}
+                            >
+                              <FaEdit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => openDeleteConfirmation(restaurant)}
+                            >
+                              <FaTrash className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+            <Dialog
+              open={openDeleteDialog}
+              onOpenChange={(open) => {
+                setOpenDeleteDialog(open);
+                if (!open) {
+                  setRestaurantToDelete(null);
+                }
+              }}
+            >
+              <DialogContent className="max-w-[90vw] sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-lg sm:text-xl">Confirmar Exclusão</DialogTitle>
+                </DialogHeader>
+                <p className="text-sm sm:text-base">
+                  Tem certeza que deseja excluir o restaurante{' '}
+                  <span className="font-semibold">{restaurantToDelete?.name}</span>?
+                </p>
+                <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                  <Button variant="outline" onClick={() => setOpenDeleteDialog(false)} className="text-sm sm:text-base">
+                    Cancelar
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => restaurantToDelete && handleDelete(restaurantToDelete.id)}
+                    className="text-sm sm:text-base"
+                  >
+                    Excluir
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <Button onClick={handleLogout} className="w-full text-sm sm:text-base">
+              Sair
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
   );
 }
