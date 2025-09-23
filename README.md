@@ -1,10 +1,22 @@
-## Usuario e Senha 
-- Para logar no aplicativo deve usar os usuarios admin e admin123 que são injetados por variaveis e ambiente pela vercel.
+## Usuario e Senha
+- Para logar no aplicativo deve usar os usuarios **admin** e **admin123** que são injetados por variaveis e ambiente pela vercel.
+
+
+**UX/UI**
+- Layout responsivo
+- Feedbacks de ação (toasts/estados de loading, confirmação ao deletar)
+- Validação amigável de formulário
+
+**Deploy**
+- Publicar na **Vercel**
+- Incluir URL pública no README **https://restaurant-manager-ten.vercel.app/**
+
+---
 
 ## 🧭 Escopo mínimo (MVP)
 
 - [x] Login local (usuário/senha fixos)  
-- [x] Rota protegida com dashboard "Usado middleware"  
+- [x] Rota protegida com dashboard  
 - [x] Listagem + criação + edição + exclusão  
 - [x] Persistência via `localStorage`  
 - [x] Busca/filtração e ordenação  
@@ -28,5 +40,3 @@ git clone <seu-repo>.git
 cd <seu-repo>
 npm i
 npm run dev
-
-
