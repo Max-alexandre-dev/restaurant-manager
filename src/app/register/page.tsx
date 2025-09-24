@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabaseClient';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState<string>('');
@@ -76,7 +77,7 @@ export default function RegisterPage() {
             </Button>
           </form>
           <p className="mt-4 text-center text-sm">
-            Já tem conta? <a href="/" className="text-blue-500 hover:underline">Entrar</a>
+            Já tem conta? <Link href="/" className="text-blue-500 hover:underline">Entrar</Link>
           </p>
         </CardContent>
       </Card>
