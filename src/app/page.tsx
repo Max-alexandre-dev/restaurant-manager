@@ -8,26 +8,42 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabaseClient';
 
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
  
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+      if (loading) return;
+      setLoading(true);
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
       
-       localStorage.setItem('username', JSON.stringify(email));
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
-      document.cookie = `username=${email}; path=/`
+      setLoading(false);
+       
+      if (!!error) {
+        setError('Email ou senha inválidos')
+        return 
+      }
+      if (data.session ) {
+        localStorage.setItem('username', JSON.stringify(email));
+
+        document.cookie = `username=${email}; path=/`
       
-      router.push('/dashboard');     
+        router.push('/dashboard'); 
+      }
+   
     
   };
 
@@ -77,8 +93,8 @@ export default function LoginPage() {
               />
             </div>
             {error && <p className="text-red-500 text-xs sm:text-sm">{error}</p>}
-            <Button type="submit" className="w-full text-sm sm:text-base">
-              Entrar
+            <Button type="submit"  className="w-full text-sm sm:text-base">
+            {loading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm">

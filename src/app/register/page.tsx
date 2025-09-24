@@ -17,13 +17,17 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
 
-    const { data, error: authError } = await supabase.auth.signUp({
+    if (loading==true) return;
+    setLoading(true);
+
+    const { error: authError } = await supabase.auth.signUp({
       email,
       password,
     });
+
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     if (authError) {
       setError(authError.message);
