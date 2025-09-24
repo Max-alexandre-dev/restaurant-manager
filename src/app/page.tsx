@@ -6,40 +6,53 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/lib/supabaseClient';
 
-const AUTH_TOKEN_KEY = 'authToken';
-const MOCK_TOKEN = 'mock-token-123';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+ 
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+      if (loading) return;
+      setLoading(true);
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      setLoading(false);
+       
+      if (!!error) {
+        setError('Email ou senha inválidos')
+        return 
+      }
+      if (data.session ) {
+        localStorage.setItem('username', JSON.stringify(email));
+
+        document.cookie = `username=${email}; path=/`
+      
+        router.push('/dashboard'); 
+      }
+   
+    
+  };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem(AUTH_TOKEN_KEY);
-      if (token) {
-        router.replace('/dashboard');
-      }
+    const username = localStorage.getItem('username')
+    if (username) {
+      router.push('/dashboard')
     }
-  }, [router]);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    const validUsername = process.env.NEXT_PUBLIC_VALID_USERNAME;
-    const validPassword = process.env.NEXT_PUBLIC_VALID_PASSWORD;
-
-    if (username === validUsername && password === validPassword) {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(AUTH_TOKEN_KEY, MOCK_TOKEN);
-        localStorage.setItem('username', username);
-      }
-      router.push('/dashboard');
-    } else {
-      setError('Usuário ou senha inválidos');
-    }
-  };
+  }, [router])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
@@ -55,8 +68,11 @@ export default function LoginPage() {
                 id="username"
                 type="text"
                 placeholder="Digite seu usuário"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setError('')
+                }}
                 required
                 className="w-full text-sm sm:text-base"
               />
@@ -68,16 +84,22 @@ export default function LoginPage() {
                 type="password"
                 placeholder="Digite sua senha"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setError('')
+                }}
                 required
                 className="w-full text-sm sm:text-base"
               />
             </div>
             {error && <p className="text-red-500 text-xs sm:text-sm">{error}</p>}
-            <Button type="submit" className="w-full text-sm sm:text-base">
-              Entrar
+            <Button type="submit"  className="w-full text-sm sm:text-base">
+            {loading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
+          <p className="mt-4 text-center text-sm">
+            Não tem conta? <a href="/register" className="text-blue-500 hover:underline">Criar Conta</a>
+          </p>
         </CardContent>
       </Card>
     </div>
