@@ -13,7 +13,6 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';
-import { supabase } from '@/lib/supabaseClient';
 
 interface Restaurant {
   id: number;
